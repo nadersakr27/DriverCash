@@ -227,16 +227,18 @@ class Deliver:
         # trace when user change the value in years combobox
         self.selectYearcombo.bind("<<ComboboxSelected>>",self.fetchdata)
       
-        #   frame left two ----------------------------------------------------------
+      
+
+
+
+        #  display the data of worker in database  ----------------------------------------------------------
         dataframeleft2= Frame(self.root,relief=RIDGE,bg="white")
         dataframeleft2.place(x=25,y=460,width=750,height=55)
-        
         self.work=ttk.Treeview(dataframeleft2,columns=("id","name","ideg","phone",))
         self.work.heading("id",text="لوحة المركبة")
         self.work.heading("name",text="الاســم")
         self.work.heading("ideg",text="رقم البطاقــة")
         self.work.heading("phone",text="رقم الهاتــف")
-        
         self.work["show"]="headings"
         self.work.pack(fill=BOTH,expand=1)
         self.work.column( "id",width=50,anchor=CENTER)
@@ -247,43 +249,46 @@ class Deliver:
         self.selectYearcombo.set(int(self.noww.strftime("%Y")))
         self.monthSelectioncombo.set(monthes[int(self.noww.strftime("%m"))-1])
         
-    # fatora ----------------------------------------------------------
+    # to make a list of orders in month which user select ----------------------------------------------------------
         t= 0
         yy = 0
         dataframeleft3= Frame(self.root,relief=RIDGE,bg="white")
         dataframeleft3.place(x=25,y=540,height=230,width=750,)
         lab11=Label(dataframeleft3,text="استخراج فـاتورة شهرية",fg="white",bg="darkgreen",font=("times new roman",14,"bold"))
         lab11.pack(side=TOP,fill=X,ipady=14)
+        # choise the worker
         lab12=Label(dataframeleft3,text="اختار السائـق",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
         lab12.place(x=550+t,y=60+y) 
         self.comb4=ttk.Combobox(dataframeleft3,width=12,font=("arial",14,""),state="readonly",justify="center")
         self.comb4.place(x=360+t,y=60+y)
-       
-        lab17=Label(dataframeleft3,text="مكان التخزين",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
-        lab17.place(x=550,y=105+y) 
-        lab18=Label(dataframeleft3,textvariable=self.store,bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
-        lab18.place(x=90,y=105+y) 
-        
+        # label of month
         lab14=Label(dataframeleft3,text="الشـهر",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
         lab14.place(x=260+t,y=60+y)
-        
+        # to select month
         self.comb5=ttk.Combobox(dataframeleft3,width=12,font=("arial",14,""),state="readonly",justify="center")
         self.comb5.set("")
         self.comb5.place(x=90+t,y=60+y)
         self.comb5['values']=monthes
         self.comb5.set(monthes[int(self.noww.strftime("%m"))-1])
-
+        # choice your path in device
         buttadd4=Button(dataframeleft3,text="اختار مكان التخزيـن",font=("arial",14,"bold"),fg="white",width=10,bg="darkblue",command=self.openpath)
         buttadd4.place(x=100,y=160+y)
-
+        # display the path
+        lab17=Label(dataframeleft3,text="مكان التخزين",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
+        lab17.place(x=550,y=105+y) 
+        lab18=Label(dataframeleft3,textvariable=self.store,bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
+        lab18.place(x=90,y=105+y) 
+        # to save the list as a pdf
         buttadd2=Button(dataframeleft3,text="حفــظ الفـاتــورة",font=("arial",14,"bold"),fg="white",width=20,bg="darkgreen")
         buttadd2.place(x=350,y=160+y)
 
-        self.fechcom()
-        self.fetchdata()
-        self.fetchdataaa()
 
-        
+
+
+
+        # fetch all workers in database in workerscombobox when user come into program
+        self.fechcom()
+
     #--------------------------------------------
     # create table workers (id varchar(255) not null,name varchar(255) unique null,ideg BigINT NULL, phone varchar(11));
     #--------------------------------------------

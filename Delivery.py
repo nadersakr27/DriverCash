@@ -1,5 +1,5 @@
 #Libraries
-## for tkinter window
+## for tkinter window 
 from tkinter import*
 from tkinter import ttk
 import tkinter  as tk 
@@ -39,6 +39,7 @@ class Deliver:
         self.root.geometry("1550x800+0+0")
          # declaring string variable 
         self.x = dt.datetime.now()
+        self.tt=StringVar()
         self.daa=StringVar()
         self.kaa=StringVar()
         self.namm=StringVar()
@@ -142,7 +143,7 @@ class Deliver:
         buttadd5=Button(addingorderFram,text="حـذف",font=("arial",14,"bold"),fg="white",width=10,bg="darkred",command=self.delete)
         buttadd5.place(x=10,y=220) 
         # trace if user change day in dataentry 
-        self.sel.trace("w",self.reset)
+        # self.sel.trace("w",self.reset)
 #         
 # 
 # 
@@ -250,24 +251,23 @@ class Deliver:
         self.monthSelectioncombo.set(monthes[int(self.noww.strftime("%m"))-1])
         
     # to make a list of orders in month which user select ----------------------------------------------------------
-        t= 0
-        yy = 0
+        
         dataframeleft3= Frame(self.root,relief=RIDGE,bg="white")
         dataframeleft3.place(x=25,y=540,height=230,width=750,)
         lab11=Label(dataframeleft3,text="استخراج فـاتورة شهرية",fg="white",bg="darkgreen",font=("times new roman",14,"bold"))
         lab11.pack(side=TOP,fill=X,ipady=14)
         # choise the worker
         lab12=Label(dataframeleft3,text="اختار السائـق",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
-        lab12.place(x=550+t,y=60+y) 
+        lab12.place(x=550,y=60+y) 
         self.comb4=ttk.Combobox(dataframeleft3,width=12,font=("arial",14,""),state="readonly",justify="center")
-        self.comb4.place(x=360+t,y=60+y)
+        self.comb4.place(x=360,y=60+y)
         # label of month
         lab14=Label(dataframeleft3,text="الشـهر",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
-        lab14.place(x=260+t,y=60+y)
+        lab14.place(x=260,y=60+y)
         # to select month
         self.comb5=ttk.Combobox(dataframeleft3,width=12,font=("arial",14,""),state="readonly",justify="center")
         self.comb5.set("")
-        self.comb5.place(x=90+t,y=60+y)
+        self.comb5.place(x=90,y=60+y)
         self.comb5['values']=monthes
         self.comb5.set(monthes[int(self.noww.strftime("%m"))-1])
         # choice your path in device
@@ -297,11 +297,9 @@ class Deliver:
         self.store.set(str(filename))
     def ref(self,arg):
         self.orders.delete(*self.orders.get_children())
-        # self.getid()
         self.fetchdata()
         self.fetchdataaa()
         self.rr=self.workercombo.get()
-        # self.id.set(self.rr)
         self.namm.set(self.rr)
     def reset(self,*args):
         self.mad.set(0)
@@ -309,6 +307,7 @@ class Deliver:
         self.kaa.set(0)
         self.hass.set(0)
         self.haff.set(0)
+        self.sel.set(self.tt.get())
         self.key=False
         self.keyy=False
     def iaddinfo(self):
@@ -321,15 +320,9 @@ class Deliver:
                                 username ="root",
                                 password = "nader01227546543N",)
                                 mycursor = conn.cursor()
-                                newname = ""
-                                for i in str(self.name.get()):
-                                    if i == ' ':
-                                        newname+='_'
-                                    else:
-                                        newname+=i
-
-                                strr ="create table nader.{} (ta DATE UNIQUE NULL ,daa DOUBLE NULL,kaa DOUBLE NULL , haff DOUBLE NULL ,hass DOUBLE NULL,tot DOUBLE NULL , mad DOUBLE NULL ,mot DOUBLE NULL,id INT NULL)".format(newname)
-                                mycursor.execute("insert into workers values(%s,%s,%s,%s)",(self.idd.get(),self.name.get(),self.ideg.get(),self.phon.get()))
+                                strr ="create table nader.{} (ta DATE UNIQUE NULL ,daa DOUBLE NULL,kaa DOUBLE NULL , haff DOUBLE NULL ,hass DOUBLE NULL,tot DOUBLE NULL , mad DOUBLE NULL ,mot DOUBLE NULL,id INT NULL)".format(self.name.get().strip())
+                                ext2="insert into workers values(%s,%s,%s,%s)",(self.idd.get(),self.name.get(),self.ideg.get(),self.phon.get())
+                                mycursor.execute(ext2)
                                 mycursor.execute(strr)
                                 conn.commit()
                                 self.fechcom()
@@ -371,15 +364,7 @@ class Deliver:
                     host = "localhost",database="nader", 
                     username ="root",
                     password = "nader01227546543N")
-
-                    newname = ""
-                    for i in str(self.workercombo.get()):
-                        if i == ' ':
-                            newname+='_'
-                        else:
-                            newname+=i
-
-                    strh="select mot from nader.{}".format(newname)
+                    strh="select mot from nader.{}".format(self.workercombo.get().strip())
                     rowww= conn.cursor()
                     rowww.execute(strh)
                     row=rowww.fetchall()
@@ -388,21 +373,18 @@ class Deliver:
                     else :
                         help =row[len(row)-1][0]
                     self.u = round(round(0.7*float(self.daa.get()),2)+round(0.8*float(self.kaa.get()),2)+float(self.haff.get())+float(-1*float(self.hass.get())) + help,2)
-                    # print(self.u)
-                    stre='insert into nader.{} values("{}",{},{},{},{},{},{},{},DEFAULT)'.format(newname,str(self.cal.get_date()),round(0.7*float(self.daa.get()),2),round(0.8*float(self.kaa.get()),2),float(self.haff.get()),float(self.hass.get()),float(self.u),float(self.mad.get()),float(float(self.u)-float(self.mad.get())))
+           
+                    stre='insert into nader.{} values("{}",{},{},{},{},{},{},{},DEFAULT)'.format(self.workercombo.get().strip(),str(self.cal.get_date()),round(0.7*float(self.daa.get()),2),round(0.8*float(self.kaa.get()),2),float(self.haff.get()),float(self.hass.get()),float(self.u),float(self.mad.get()),float(float(self.u)-float(self.mad.get())))
                     mycursor = conn.cursor()
-                    # print(stre)
                     mycursor.execute(stre)
                     self.modulateId(mycursor)
                     self.medulatetot(mycursor)
                     conn.commit()
-
                     conn.close()
                     messagebox.showinfo("مقبول","تم الاضـافة بشكل صحيــح")
                     self.fetchdata()
-                    self.reset()
                     
-                 
+                    self.reset()
                 except:
                     messagebox.showerror("خطــأ","ادخــال غيــر صحيـــح")
         else :
@@ -415,12 +397,6 @@ class Deliver:
                 username ="root",
                 password = "nader01227546543N")
                 self.orders.delete(*self.orders.get_children())
-                newname = ""
-                for i in str(self.workercombo.get()):
-                    if i == ' ':
-                        newname+='_'
-                    else:
-                        newname+=i
                 self.o = "01"
                 self.p=  "01"
                 self.yb =str(self.selectYearcombo.get())
@@ -463,19 +439,16 @@ class Deliver:
                     self.p = "01"
                     self.ya =str( int(self.ya) + 1)
                                 
-                strh='select * from nader.{} where ta BETWEEN "{}-{}-01" AND "{}-{}-01" order by ta DESC'.format(newname,self.yb,self.o,self.ya,self.p)
+                strh='select * from nader.{} where ta BETWEEN "{}-{}-01" AND "{}-{}-01" order by ta DESC'.format(self.workercombo.get().strip(),self.yb,self.o,self.ya,self.p)
                 rowww= conn.cursor()
-              
                 rowww.execute(strh)
                 rows=rowww.fetchall()
                 if len(rows)!= 0 :
                     self.orders.delete(*self.orders.get_children())
                 for i in rows :
-                    self.orders.insert("",END,values=i)
-                # print(rows)
+                    self.orders.insert("",END,values=i)             
                 conn.commit()
                 conn.close()        
-            
         except:
             messagebox.showerror("4ekokike")
     def fetchdataaa(self) :
@@ -496,93 +469,44 @@ class Deliver:
                     self.work.delete(*self.work.get_children())
                 for i in rows :
                     self.work.insert("",END,values=i)
-                # print(rows)
+               
                 conn.commit()
                 conn.close()        
             
         except:
             messagebox.showerror("sasa")
-    
     def modulateId(self,roe):
         self.rer = 1
         try:
-                    # conn=mysql.connector.connect(
-                    # host = "localhost",database="nader", 
-                    # username ="root",
-                    # password = "nader01227546543N")
-
-                    newname = ""
-                    for i in str(self.workercombo.get()):
-                        if i == ' ':
-                            newname+='_'
-                        else:
-                            newname+=i
-                    strh="select id , ta from nader.{} order by ta".format(newname)
+                    strh="select id , ta from nader.{} order by ta".format(self.workercombo.get().strip())
                 
                     roe.execute(strh)
                 
                     row=roe.fetchall()
                     for i in row : 
-                        st = 'update nader.{} set id = {} where ta = "{}"'.format(newname,self.rer,i[1])
+                        st = 'update nader.{} set id = {} where ta = "{}"'.format(self.workercombo.get().strip(),self.rer,i[1])
                         roe.execute(st)
                         self.rer+=1
-                
-                    # self.u = round(round(0.7*float(self.daa.get()),2)+round(0.8*float(self.kaa.get()),2)+float(self.haff.get())+float(-1*float(self.hass.get())) + help,2)
-                    # # print(self.u)
-                    # stre='insert into nader.{} values("{}",{},{},{},{},{},{},{},DEFAULT)'.format(newname,str(self.cal.get_date()),round(0.7*float(self.daa.get()),2),round(0.8*float(self.kaa.get()),2),float(self.haff.get()),float(self.hass.get()),float(self.u),float(self.mad.get()),float(float(self.u)-float(self.mad.get())))
-                    # mycursor = conn.cursor()
-                    # # print(stre)
-                    # mycursor.execute(stre)
-                    # conn.commit()
-                   
-                    # self.modulateId()
-                    # self.reset()
-                    # conn.close()
-                  
-                    # print(r)
-                    # messagebox.showinfo("مقبول","تم الاضـافة بشكل صحيــح")
         except:
                     messagebox.showerror("خطــأ","ERROR")
     def medulatetot(self,roe): 
         self.rer = 1
         self.tr = 0 
         try:
-                    newname = ""
-                    for i in str(self.workercombo.get()):
-                        if i == ' ':
-                            newname+='_'
-                        else:
-                            newname+=i
-                    strh="select id ,daa,kaa,haff,hass from nader.{} order by ta".format(newname)
+                    strh="select id ,daa,kaa,haff,hass from nader.{} order by ta".format(self.workercombo.get().strip())
                 
                     roe.execute(strh)
                 
                     row=roe.fetchall()
                     for i in row :
-                        st = 'update nader.{} set tot = daa + kaa + haff - hass - mad + {}, mot = tot where id = {} ;'.format(newname,self.tr,self.rer)
-                        # print(st)
+                        st = 'update nader.{} set tot = daa + kaa + haff - hass - mad + {}, mot = tot where id = {} ;'.format(self.workercombo.get().strip(),self.tr,self.rer)
+                    
                         roe.execute(st)
-                        # print(i[1])
+                  
                         self.tr += round(i[1]+i[2]+i[3]-i[4],2)
                         self.rer+=1
-                
-                    # self.u = round(round(0.7*float(self.daa.get()),2)+round(0.8*float(self.kaa.get()),2)+float(self.haff.get())+float(-1*float(self.hass.get())) + help,2)
-                    # # print(self.u)
-                    # stre='insert into nader.{} values("{}",{},{},{},{},{},{},{},DEFAULT)'.format(newname,str(self.cal.get_date()),round(0.7*float(self.daa.get()),2),round(0.8*float(self.kaa.get()),2),float(self.haff.get()),float(self.hass.get()),float(self.u),float(self.mad.get()),float(float(self.u)-float(self.mad.get())))
-                    # mycursor = conn.cursor()
-                    # # print(stre)
-                    # mycursor.execute(stre)
-                    # conn.commit()
-                   
-                    # self.modulateId()
-                    # self.reset()
-                    # conn.close()
-           
-                    # print(r)
-                    # messagebox.showinfo("مقبول","تم الاضـافة بشكل صحيــح")
         except:
                     messagebox.showerror("خطــأ","hee")
-
     def delete(self):
         try :
                 if self.workercombo.get() != "" : 
@@ -593,34 +517,22 @@ class Deliver:
                            messagebox.showwarning("خطـأ", "لم يتم ادخـال جميع البيانـات")
                         else :    
                            if self.workercombo.get() != "":
-
-                               newname = ""
-                               for i in str(self.workercombo.get()):
-                                   if i == ' ':
-                                       newname+='_'
-                                   else:
-                                       newname+=i
                                conn=mysql.connector.connect(
                                        host = "localhost",database="nader", 
                                        username ="root",
                                        password = "nader01227546543N")
                                mycursor = conn.cursor()
 
-                               strt='delete from nader.{} where ta = "{}"'.format(newname,str(self.sel.get()))
-                               # print(strt)
+                               strt='delete from nader.{} where ta = "{}"'.format(self.workercombo.get().strip(),str(self.sel.get()))
+                        
                                mycursor.execute(strt)
-                               srt='select ta from nader.{} where ta = "{}"'.format(str(self.workercombo.get()),str(self.sel.get()))   
-                               # mycursor.execute(srt)
-                               t= self.sel.get()
-                               row= mycursor.fetchall()
-
                                messagebox.showinfo("مقبول","تم الحـذف بشكل صحيـح")
                                self.modulateId(mycursor)
                                self.medulatetot(mycursor)
                                conn.commit()
                                self.orders.delete(*self.orders.get_children())
-                               
                                self.fetchdata()
+                            
                                self.reset()
                                conn.close()
                 else:
@@ -637,21 +549,14 @@ class Deliver:
                            messagebox.showwarning("خطـأ", "لم يتم ادخـال جميع البيانـات")
                         else :    
                            if self.workercombo.get() != "":
-
-                               newname = ""
-                               for i in str(self.workercombo.get()):
-                                   if i == ' ':
-                                       newname+='_'
-                                   else:
-                                       newname+=i
                                conn=mysql.connector.connect(
                                        host = "localhost",database="nader", 
                                        username ="root",
                                        password = "nader01227546543N")
                                mycursor = conn.cursor()
 
-                               strt='update nader.{} set daa = {},kaa={},haff={},hass={} , mad = {} where ta = "{}"'.format(newname,  round(0.7*float(self.daa.get()),2),round(0.8*float(self.kaa.get()),2),round(float(self.haff.get()),2),round(float(self.hass.get()),2),round(float(self.mad.get()),2),str(self.sel.get()))
-                               # print(strt)
+                               strt='update nader.{} set daa = {},kaa={},haff={},hass={} , mad = {} where ta = "{}"'.format(self.workercombo.get().strip(),  round(0.7*float(self.daa.get()),2),round(0.8*float(self.kaa.get()),2),round(float(self.haff.get()),2),round(float(self.hass.get()),2),round(float(self.mad.get()),2),str(self.sel.get()))
+                              
                                mycursor.execute(strt)
                                srt='select ta from nader.{} where ta = "{}"'.format(str(self.workercombo.get()),str(self.sel.get()))   
                                messagebox.showinfo("مقبول","تم التعديل بشكل صحيـح")
@@ -671,8 +576,9 @@ class Deliver:
                 cursor_row =self.orders.focus()
                 content = self.orders.item(cursor_row)
                 row= content['values']
-                # self.cal.set_date(row[0])
                 if len(row) !=0:
+                    if self.key == False:
+                        self.tt.set(self.sel.get())
                     self.sel.set(row[0])
                     self.daa.set(str(round(1.428571428571429*float(row[1]),2)))
                     self.kaa.set(str(1.25*float(row[2])))
@@ -680,6 +586,7 @@ class Deliver:
                     self.hass.set(row[4])
                     self.mad.set(row[6])
                     self.key=True
+                 
         except :
             messagebox.showerror("eree")  
     def updateinfo(self):
@@ -734,9 +641,8 @@ class Deliver:
                     self.phon.set(row[3])
                     self.keyy=True
                     self.namo.set(row[1])
-                    
         except :
-            messagebox.showerror("eree")  
+            messagebox.showerror("eree")
     #-------------------------------------------------------
 if __name__=="__main__":
     root = Tk()

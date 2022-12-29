@@ -98,79 +98,94 @@ class Deliver:
         
 
 
-        # adding editing and deleting tasts fram table of worker
-        tastsFram= Frame(self.root,relief=RIDGE,bg="white")
-        tastsFram.place(x=800,y=240,height=260+y,width=710,)
+        # adding editing and deleting order fram table of worker
+        addingorderFram= Frame(self.root,relief=RIDGE,bg="white")
+        addingorderFram.place(x=800,y=240,height=260+y,width=710,)
        
-        lab2=Label(tastsFram,text="الاضـــافــات",fg="white",bg="darkgreen",font=("times new roman",14,"bold"))
-        lab2.pack(side=TOP,fill=X,ipady=14)
-        lab3=Label(tastsFram,text="قيمة الداخلــــي بالجنية",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
-        lab3.place(x=535+x,y=60+y) 
-        entr1=Entry(tastsFram,textvariable=self.daa,font=("arial",14,""),relief=RIDGE,borderwidth=2,width=12)
-        entr1.place(x=360+x,y=60+y) 
-        lab4=Label(tastsFram,text="قيمة الخارجـــي بالجنية",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
-        lab4.place(x=535+x,y=105+y) 
-        entr2=Entry(tastsFram,textvariable=self.kaa,font=("arial",14,""),relief=RIDGE,borderwidth=2,width=12)
-        entr2.place(x=360+x,y=105+y)
-        lab7=Label(tastsFram,text="قيمة الحـــافــز بالجنية",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
-        lab7.place(x=190+x,y=60+y) 
-        entr3=Entry(tastsFram,font=("arial",14,""),textvariable=self.haff,relief=RIDGE,borderwidth=2,width=12)
-        entr3.place(x=14+x,y=60+y) 
-        lab8=Label(tastsFram,text="قيمة الخــصــم بالجنية",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
-        lab8.place(x=190+x,y=105+y) 
-        entr4=Entry(tastsFram,textvariable=self.hass,font=("arial",14,""),relief=RIDGE,borderwidth=2,width=12)
-        entr4.place(x=14+x,y=105+y)
-        
-        lab9=Label(tastsFram,text="المدفوع اليوم",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
+        addingorderlabel=Label(addingorderFram,text="قائمة التوصيلات",fg="white",bg="darkgreen",font=("times new roman",14,"bold"))
+        addingorderlabel.pack(side=TOP,fill=X,ipady=14)
+        addinglabel1=Label(addingorderFram,text="قيمة الداخلــــي بالجنية",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
+        addinglabel1.place(x=535+x,y=60+y) 
+        addingentry1=Entry(addingorderFram,textvariable=self.daa,font=("arial",14,""),relief=RIDGE,borderwidth=2,width=12)
+        addingentry1.place(x=360+x,y=60+y) 
+        addinglabel2=Label(addingorderFram,text="قيمة الخارجـــي بالجنية",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
+        addinglabel2.place(x=535+x,y=105+y) 
+        addingentry2=Entry(addingorderFram,textvariable=self.kaa,font=("arial",14,""),relief=RIDGE,borderwidth=2,width=12)
+        addingentry2.place(x=360+x,y=105+y)
+        addinglabel3=Label(addingorderFram,text="قيمة الحـــافــز بالجنية",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
+        addinglabel3.place(x=190+x,y=60+y) 
+        addingentry3=Entry(addingorderFram,font=("arial",14,""),textvariable=self.haff,relief=RIDGE,borderwidth=2,width=12)
+        addingentry3.place(x=14+x,y=60+y) 
+        addinglabel4=Label(addingorderFram,text="قيمة الخــصــم بالجنية",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
+        addinglabel4.place(x=190+x,y=105+y) 
+        addingentry4=Entry(addingorderFram,textvariable=self.hass,font=("arial",14,""),relief=RIDGE,borderwidth=2,width=12)
+        addingentry4.place(x=14+x,y=105+y)
+        lab9=Label(addingorderFram,text="المدفوع اليوم",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
         lab9.place(x=215+x,y=155+y) 
-        entr41=Entry(tastsFram,textvariable=self.mad,font=("arial",14,""),relief=RIDGE,borderwidth=2,width=12)
+        entr41=Entry(addingorderFram,textvariable=self.mad,font=("arial",14,""),relief=RIDGE,borderwidth=2,width=12)
         entr41.place(x=14+x,y=155+y)
         
-        lab10=Label(tastsFram,text="التـاريـخ",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
+        lab10=Label(addingorderFram,text="التـاريـخ",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
         lab10.place(x=570+x,y=155+y) 
         #datetime---------------------------------------------
-        
+        # set todaytime
         self.noww=dt.datetime.now()
         #-----------------------------------------------------
-        
-        self.cal=DateEntry(tastsFram, date_pattern='dd/mm/yy',textvariable=self.sel,year =int(self.noww.strftime("%y")), month = int(self.noww.strftime("%m")),
-        			day = int(self.noww.strftime("%d")))
+        # dataentry for day which we add task in
+        self.cal=DateEntry(addingorderFram, date_pattern='dd/mm/yy',textvariable=self.sel,year =int(self.noww.strftime("%y")), month = int(self.noww.strftime("%m")),day = int(self.noww.strftime("%d")))
         self.cal.place(x=360+x,y=155+y)             
-        
-        buttadd7=Button(tastsFram,text="اضــافــة",font=("arial",14,"bold"),fg="white",width=20,bg="darkgreen",command=self.iadd)
+        # adding buttones
+        buttadd7=Button(addingorderFram,text="اضــافــة",font=("arial",14,"bold"),fg="white",width=20,bg="darkgreen",command=self.iadd)
         buttadd7.place(x=350,y=220)
-        buttadd6=Button(tastsFram,text="تعديــل",font=("arial",14,"bold"),fg="white",width=10,bg="darkblue",command=self.update)
+        buttadd6=Button(addingorderFram,text="تعديــل",font=("arial",14,"bold"),fg="white",width=10,bg="darkblue",command=self.update)
         buttadd6.place(x=150,y=220) 
-        buttadd5=Button(tastsFram,text="حـذف",font=("arial",14,"bold"),fg="white",width=10,bg="darkred",command=self.delete)
+        buttadd5=Button(addingorderFram,text="حـذف",font=("arial",14,"bold"),fg="white",width=10,bg="darkred",command=self.delete)
         buttadd5.place(x=10,y=220) 
-
+        # trace if user change day in dataentry 
         self.sel.trace("w",self.reset)
+#         
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+        # enter a data of worker
+        addingworkerFram= Frame(self.root,relief=RIDGE,bg="white")
+        addingworkerFram.place(x=800,y=540,height=230,width=710,)
 
-        dataframeright3= Frame(self.root,relief=RIDGE,bg="white")
-        dataframeright3.place(x=800,y=540,height=230,width=710,)
-        lab11=Label(dataframeright3,text="اضــافة سائــق",fg="white",bg="darkgreen",font=("times new roman",14,"bold"))
+        lab11=Label(addingworkerFram,text="اضــافة سائــق",fg="white",bg="darkgreen",font=("times new roman",14,"bold"))
         lab11.pack(side=TOP,fill=X,ipady=14)
-        lab12=Label(dataframeright3,text="الاســم",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
+        lab12=Label(addingworkerFram,text="الاســم",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
         lab12.place(x=550,y=60+y) 
-        entr11=Entry(dataframeright3,textvariable=self.name,font=("arial",14,""),relief=RIDGE,borderwidth=2,width=12)
+        entr11=Entry(addingworkerFram,textvariable=self.name,font=("arial",14,""),relief=RIDGE,borderwidth=2,width=12)
         entr11.place(x=360,y=60+y) 
-        lab13=Label(dataframeright3,text="رقم الهـــاتف",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
+        lab13=Label(addingworkerFram,text="رقم الهـــاتف",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
         lab13.place(x=550,y=105+y) 
-        entr12=Entry(dataframeright3,textvariable=self.phon,font=("arial",14,""),relief=RIDGE,borderwidth=2,width=12)
+        entr12=Entry(addingworkerFram,textvariable=self.phon,font=("arial",14,""),relief=RIDGE,borderwidth=2,width=12)
         entr12.place(x=360,y=105+y)
-        lab14=Label(dataframeright3,text="رقم البطاقــة",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
+        lab14=Label(addingworkerFram,text="رقم البطاقــة",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
         lab14.place(x=190,y=60+y) 
-        entr13=Entry(dataframeright3,font=("arial",14,""),textvariable=self.ideg,relief=RIDGE,borderwidth=2,width=12)
+        entr13=Entry(addingworkerFram,font=("arial",14,""),textvariable=self.ideg,relief=RIDGE,borderwidth=2,width=12)
         entr13.place(x=14,y=60+y) 
-        lab15=Label(dataframeright3,text="لوحة المركبة",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
+        lab15=Label(addingworkerFram,text="لوحة المركبة",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
         lab15.place(x=190,y=105+y) 
-        entr14=Entry(dataframeright3,textvariable=self.idd,font=("arial",14,""),relief=RIDGE,borderwidth=2,width=12)
+        entr14=Entry(addingworkerFram,textvariable=self.idd,font=("arial",14,""),relief=RIDGE,borderwidth=2,width=12)
         entr14.place(x=14,y=105+y)
-        buttadd2=Button(dataframeright3,text="اضــافــة",font=("arial",14,"bold"),fg="white",width=20,bg="darkgreen",command=self.iaddinfo)
+        buttadd2=Button(addingworkerFram,text="اضــافــة",font=("arial",14,"bold"),fg="white",width=20,bg="darkgreen",command=self.iaddinfo)
         buttadd2.place(x=350,y=160+y)
-        buttadd3=Button(dataframeright3,text="تعديــل",font=("arial",14,"bold"),fg="white",width=10,bg="darkblue",command=self.updateinfo)
+        buttadd3=Button(addingworkerFram,text="تعديــل",font=("arial",14,"bold"),fg="white",width=10,bg="darkblue",command=self.updateinfo)
         buttadd3.place(x=100,y=160+y)
+# 
 
+
+
+
+
+# 
+# display data in orders table in database where name is in selectworkercombbox
         dataframeleft= Frame(self.root,relief=RIDGE,bg="white")
         dataframeleft.place(x=25,y=115,width=750,height=340)
         lab1=Label(dataframeleft,textvariable=self.namm,fg="white",bg="teal",font=("times new roman",14,"bold"))
@@ -182,7 +197,6 @@ class Deliver:
         self.orders=ttk.Treeview(dataframeleft,columns=("ta","da","kha","ha","has","tot","mad","mot",),xscrollcommand=scx.set,yscrollcommand=scy.set)        
         scx.config(command=self.orders.xview)
         scy.config(command=self.orders.yview)
-
         self.orders.heading("ta",text="التــاريــخ")
         self.orders.heading("da",text="الداخلــي")
         self.orders.heading("kha",text="الخارجــي")
@@ -201,22 +215,18 @@ class Deliver:
         self.orders.column("tot",width=110,anchor=CENTER)
         self.orders.column("mad",width=110,anchor=CENTER)
         self.orders.column("mot",width=110,anchor=CENTER)
-
+        # trace when user click on row in tabel
         self.orders.bind("<ButtonRelease-1>",self.getdate)
-        self.rr=self.workercombo.get()
-      
-        self.id.set(self.rr)
-        self.namm.set(self.rr)
 
+        # close change values in combobox with mouse wheel
         self.workercombo.unbind_class("TCombobox", "<MouseWheel>")
-
+        # trace when user change the value in worker combobox
         self.workercombo.bind("<<ComboboxSelected>>",self.ref)
+        # trace when user change the value in monthes combobox
         self.monthSelectioncombo.bind("<<ComboboxSelected>>",self.fetchdata)
+        # trace when user change the value in years combobox
         self.selectYearcombo.bind("<<ComboboxSelected>>",self.fetchdata)
-        
-        style = ttk.Style()
-        style.configure("Treeview.Heading", font = ("",14,""))
-
+      
         #   frame left two ----------------------------------------------------------
         dataframeleft2= Frame(self.root,relief=RIDGE,bg="white")
         dataframeleft2.place(x=25,y=460,width=750,height=55)

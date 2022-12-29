@@ -1,30 +1,42 @@
+#Libraries
+## for tkinter window
 from tkinter import*
 from tkinter import ttk
-from PIL import Image,ImageTk
-from tkinter import messagebox
-import mysql.connector
-from fpdf import FPDF 
-from PIL import ImageTk , Image
 import tkinter  as tk 
 from tkcalendar import DateEntry
-import datetime as dt
+from tkinter import messagebox
+from tkcalendar import Calendar
 from tkinter import filedialog
 import os
-from tkcalendar import Calendar
-def Resize_Image(image, maxsize):
-    r1 = image.size[0]/maxsize[0] # width ratio
-    r2 = image.size[1]/maxsize[1] # height ratio
-    ratio = max(r1, r2)
-    newsize = (int(image.size[0]/ratio), int(image.size[1]/ratio))
-    image = image.resize(newsize, Image.ANTIALIAS)
-    return image
+## to creat pdf as a list of tasks
+from fpdf import FPDF 
+## to add images
+from PIL import ImageTk , Image
+# to calculate our day and datetime data type
+import datetime as dt
+# to connect with database  
+import mysql.connector
 
+# fun to resize image
+# def Resize_Image(image, maxsize):
+#     r1 = image.size[0]/maxsize[0] # width ratio
+#     r2 = image.size[1]/maxsize[1] # height ratio
+#     ratio = max(r1, r2)
+#     newsize = (int(image.size[0]/ratio), int(image.size[1]/ratio))
+#     image = image.resize(newsize, Image.ANTIALIAS)
+#     return image
+#list of monthes
 monthes=["يناير","فبراير","مارس","ابريل","مايو","يونيو","يوليو","اغسطس","سبتمبر","اكتوبر","نوفمبر","ديسمبر"]
+# list of years 
 years= [2020,2021,2022,2023,2024,2025,2026,2027,2028,2029,2030,2031,2032,2033,2034,2035,2036,2037,2038,2039,2040]
+# our main class 
 class Deliver:
 
     def __init__(self,root) :
+        # to edit root window     
         self.root = root 
+        self.root.title("Deliver system")
+        self.root.geometry("1550x800+0+0")
          # declaring string variable 
         self.x = dt.datetime.now()
         self.daa=StringVar()
@@ -33,7 +45,7 @@ class Deliver:
         self.dayy=StringVar()
         self.mon=StringVar()
         self.year=StringVar()
-        self.store = StringVar()
+        self.store=StringVar()
         self.haff=StringVar()
         self.hass=StringVar()
         self.id=StringVar()
@@ -41,7 +53,7 @@ class Deliver:
         self.trr=StringVar()
         self.mad=StringVar()
         self.name=StringVar()
-        self.sel=tk.StringVar()
+        self.sel=StringVar()
         self.today=StringVar()
         self.idd=StringVar()
         self.ideg= StringVar()
@@ -51,83 +63,85 @@ class Deliver:
         self.key = False
         self.keyy= False
         #-------------------------------------------
+        # to rest all variable to its default values
         self.reset()
         #--------------------------------------------
-        self.root.title("Deliver system")
-        self.root.geometry("1550x800+0+0")
-        Labe1= Label(self.root,text="علــــي الســـريـــع",bd=2,bg="teal",fg="white",relief=RIDGE,pady=5,padx=4,font=("times new roman",32,""))
-        Labe1.pack(side=TOP,fill=X,ipady=14)
-        # Create an object of tkinter ImageTk
-       
+        #the whole name of the market
+        MarketName= Label(self.root,text="علــــي الســـريـــع",bd=2,bg="teal",fg="white",relief=RIDGE,pady=5,padx=4,font=("times new roman",32,""))
+        MarketName.pack(side=TOP,fill=X,ipady=14)
+        # padding to position of all widgits
         x = 0
         y = 15
+        # select worker from a workercombo
+        SelectworkerFrame= Frame(self.root,relief=RIDGE,bg="white")
+        SelectworkerFrame.place(x=1290,y=115,height=100,width=220,)
+        labelOfDelectworker=Label(SelectworkerFrame,text="اختـــار السائـق",fg='white',bg="teal",font=("arial",14,"bold"))
+        labelOfDelectworker.pack(side=TOP,fill=X,ipady=14)
+        self.workercombo=ttk.Combobox(SelectworkerFrame,width=30,font=("arial",14,""),state="readonly",justify="center")
+        self.workercombo.pack(side=TOP,fill=X,ipady=14)
+        # select month fram
+        monthSelectionFram= Frame(self.root,relief=RIDGE,bg="white")
+        monthSelectionFram.place(x=1045,y=115,height=100,width=220,)
+        monthSelectionLabel=Label(monthSelectionFram,text= "اختــار الشهــر",fg='white',bg="teal",font=("arial",14,"bold"))
+        monthSelectionLabel.pack(side=TOP,fill=X,ipady=14)
+        self.monthSelectioncombo=ttk.Combobox(monthSelectionFram,width=30,font=("arial",14,""),state="readonly",justify="center")
+        self.monthSelectioncombo.pack(side=TOP,fill=X,ipady=14)
+        self.monthSelectioncombo['values']=monthes
+        # select year fram
+        selectYearFram= Frame(self.root,relief=RIDGE,bg="white")
+        selectYearFram.place(x=800,y=115,height=100,width=220,)
+        selectYearLabel=Label(selectYearFram,text="اختــار السنـة",fg='white',bg="teal",font=("arial",14,"bold"))
+        selectYearLabel.pack(side=TOP,fill=X,ipady=14)
+        self.selectYearcombo=ttk.Combobox(selectYearFram,width=30,font=("arial",14,""),state="readonly",justify="center")
+        self.selectYearcombo.pack(side=TOP,fill=X,ipady=14)
+        self.selectYearcombo['values']=years   
+        
 
-        dataframerighttop= Frame(self.root,relief=RIDGE,bg="white")
-        dataframerighttop.place(x=1045,y=115,height=100,width=220,)
-        lab01=Label(dataframerighttop,text= "اختــار الشهــر",fg='white',bg="teal",font=("arial",14,"bold"))
-        lab01.pack(side=TOP,fill=X,ipady=14)
-        self.comb2=ttk.Combobox(dataframerighttop,width=30,font=("arial",14,""),state="readonly",justify="center")
-        self.comb2.pack(side=TOP,fill=X,ipady=14)
-        self.comb2['values']=monthes
 
-        dataframerighttop2= Frame(self.root,relief=RIDGE,bg="white")
-        dataframerighttop2.place(x=800,y=115,height=100,width=220,)
-        lab01=Label(dataframerighttop2,text="اختــار السنـة",fg='white',bg="teal",font=("arial",14,"bold"))
-        lab01.pack(side=TOP,fill=X,ipady=14)
-        self.comb3=ttk.Combobox(dataframerighttop2,width=30,font=("arial",14,""),state="readonly",justify="center")
-        self.comb3.pack(side=TOP,fill=X,ipady=14)
-        self.comb3['values']=years    
-
-        dataframeright= Frame(self.root,relief=RIDGE,bg="white")
-        dataframeright.place(x=1290,y=115,height=100,width=220,)
-        lab01=Label(dataframeright,text="اختـــار السائـق",fg='white',bg="teal",font=("arial",14,"bold"))
-        lab01.pack(side=TOP,fill=X,ipady=14)
-        self.comb1=ttk.Combobox(dataframeright,width=30,font=("arial",14,""),state="readonly",justify="center")
-        self.comb1.pack(side=TOP,fill=X,ipady=14)
-        # self.comb1.current(0)
-        dataframeright1= Frame(self.root,relief=RIDGE,bg="white")
-        dataframeright1.place(x=800,y=240,height=260+y,width=710,)
+        # adding editing and deleting tasts fram table of worker
+        tastsFram= Frame(self.root,relief=RIDGE,bg="white")
+        tastsFram.place(x=800,y=240,height=260+y,width=710,)
        
-        lab2=Label(dataframeright1,text="الاضـــافــات",fg="white",bg="darkgreen",font=("times new roman",14,"bold"))
+        lab2=Label(tastsFram,text="الاضـــافــات",fg="white",bg="darkgreen",font=("times new roman",14,"bold"))
         lab2.pack(side=TOP,fill=X,ipady=14)
-        lab3=Label(dataframeright1,text="قيمة الداخلــــي بالجنية",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
+        lab3=Label(tastsFram,text="قيمة الداخلــــي بالجنية",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
         lab3.place(x=535+x,y=60+y) 
-        entr1=Entry(dataframeright1,textvariable=self.daa,font=("arial",14,""),relief=RIDGE,borderwidth=2,width=12)
+        entr1=Entry(tastsFram,textvariable=self.daa,font=("arial",14,""),relief=RIDGE,borderwidth=2,width=12)
         entr1.place(x=360+x,y=60+y) 
-        lab4=Label(dataframeright1,text="قيمة الخارجـــي بالجنية",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
+        lab4=Label(tastsFram,text="قيمة الخارجـــي بالجنية",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
         lab4.place(x=535+x,y=105+y) 
-        entr2=Entry(dataframeright1,textvariable=self.kaa,font=("arial",14,""),relief=RIDGE,borderwidth=2,width=12)
+        entr2=Entry(tastsFram,textvariable=self.kaa,font=("arial",14,""),relief=RIDGE,borderwidth=2,width=12)
         entr2.place(x=360+x,y=105+y)
-        lab7=Label(dataframeright1,text="قيمة الحـــافــز بالجنية",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
+        lab7=Label(tastsFram,text="قيمة الحـــافــز بالجنية",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
         lab7.place(x=190+x,y=60+y) 
-        entr3=Entry(dataframeright1,font=("arial",14,""),textvariable=self.haff,relief=RIDGE,borderwidth=2,width=12)
+        entr3=Entry(tastsFram,font=("arial",14,""),textvariable=self.haff,relief=RIDGE,borderwidth=2,width=12)
         entr3.place(x=14+x,y=60+y) 
-        lab8=Label(dataframeright1,text="قيمة الخــصــم بالجنية",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
+        lab8=Label(tastsFram,text="قيمة الخــصــم بالجنية",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
         lab8.place(x=190+x,y=105+y) 
-        entr4=Entry(dataframeright1,textvariable=self.hass,font=("arial",14,""),relief=RIDGE,borderwidth=2,width=12)
+        entr4=Entry(tastsFram,textvariable=self.hass,font=("arial",14,""),relief=RIDGE,borderwidth=2,width=12)
         entr4.place(x=14+x,y=105+y)
         
-        lab9=Label(dataframeright1,text="المدفوع اليوم",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
+        lab9=Label(tastsFram,text="المدفوع اليوم",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
         lab9.place(x=215+x,y=155+y) 
-        entr41=Entry(dataframeright1,textvariable=self.mad,font=("arial",14,""),relief=RIDGE,borderwidth=2,width=12)
+        entr41=Entry(tastsFram,textvariable=self.mad,font=("arial",14,""),relief=RIDGE,borderwidth=2,width=12)
         entr41.place(x=14+x,y=155+y)
         
-        lab10=Label(dataframeright1,text="التـاريـخ",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
+        lab10=Label(tastsFram,text="التـاريـخ",bg='white',fg="black",font=("arial",14,""),justify=RIGHT)
         lab10.place(x=570+x,y=155+y) 
         #datetime---------------------------------------------
         
         self.noww=dt.datetime.now()
         #-----------------------------------------------------
         
-        self.cal=DateEntry(dataframeright1, date_pattern='dd/mm/yy',textvariable=self.sel,year =int(self.noww.strftime("%y")), month = int(self.noww.strftime("%m")),
+        self.cal=DateEntry(tastsFram, date_pattern='dd/mm/yy',textvariable=self.sel,year =int(self.noww.strftime("%y")), month = int(self.noww.strftime("%m")),
         			day = int(self.noww.strftime("%d")))
         self.cal.place(x=360+x,y=155+y)             
         
-        buttadd7=Button(dataframeright1,text="اضــافــة",font=("arial",14,"bold"),fg="white",width=20,bg="darkgreen",command=self.iadd)
+        buttadd7=Button(tastsFram,text="اضــافــة",font=("arial",14,"bold"),fg="white",width=20,bg="darkgreen",command=self.iadd)
         buttadd7.place(x=350,y=220)
-        buttadd6=Button(dataframeright1,text="تعديــل",font=("arial",14,"bold"),fg="white",width=10,bg="darkblue",command=self.update)
+        buttadd6=Button(tastsFram,text="تعديــل",font=("arial",14,"bold"),fg="white",width=10,bg="darkblue",command=self.update)
         buttadd6.place(x=150,y=220) 
-        buttadd5=Button(dataframeright1,text="حـذف",font=("arial",14,"bold"),fg="white",width=10,bg="darkred",command=self.delete)
+        buttadd5=Button(tastsFram,text="حـذف",font=("arial",14,"bold"),fg="white",width=10,bg="darkred",command=self.delete)
         buttadd5.place(x=10,y=220) 
 
         self.sel.trace("w",self.reset)
@@ -189,16 +203,16 @@ class Deliver:
         self.orders.column("mot",width=110,anchor=CENTER)
 
         self.orders.bind("<ButtonRelease-1>",self.getdate)
-        self.rr=self.comb1.get()
+        self.rr=self.workercombo.get()
       
         self.id.set(self.rr)
         self.namm.set(self.rr)
 
-        self.comb1.unbind_class("TCombobox", "<MouseWheel>")
+        self.workercombo.unbind_class("TCombobox", "<MouseWheel>")
 
-        self.comb1.bind("<<ComboboxSelected>>",self.ref)
-        self.comb2.bind("<<ComboboxSelected>>",self.fetchdata)
-        self.comb3.bind("<<ComboboxSelected>>",self.fetchdata)
+        self.workercombo.bind("<<ComboboxSelected>>",self.ref)
+        self.monthSelectioncombo.bind("<<ComboboxSelected>>",self.fetchdata)
+        self.selectYearcombo.bind("<<ComboboxSelected>>",self.fetchdata)
         
         style = ttk.Style()
         style.configure("Treeview.Heading", font = ("",14,""))
@@ -220,8 +234,8 @@ class Deliver:
         self.work.column( "ideg",width=110,anchor=CENTER)
         self.work.column("phone",width=110,anchor=CENTER)
         self.work.bind("<ButtonRelease-1>",self.getdateinfo)
-        self.comb3.set(int(self.noww.strftime("%Y")))
-        self.comb2.set(monthes[int(self.noww.strftime("%m"))-1])
+        self.selectYearcombo.set(int(self.noww.strftime("%Y")))
+        self.monthSelectioncombo.set(monthes[int(self.noww.strftime("%m"))-1])
         
     # fatora ----------------------------------------------------------
         t= 0
@@ -264,16 +278,14 @@ class Deliver:
     # create table workers (id varchar(255) not null,name varchar(255) unique null,ideg BigINT NULL, phone varchar(11));
     #--------------------------------------------
     def openpath(self):
-        filename = filedialog.askdirectory(initialdir=os.getcwdb(),title='اختــار مكان تخزين الفاتورة',)
-       
+        filename = filedialog.askdirectory(initialdir=os.getcwdb(),title='اختــار مكان تخزين الفاتورة')
         self.store.set(str(filename))
     def ref(self,arg):
         self.orders.delete(*self.orders.get_children())
         # self.getid()
         self.fetchdata()
         self.fetchdataaa()
-        
-        self.rr=self.comb1.get()
+        self.rr=self.workercombo.get()
         # self.id.set(self.rr)
         self.namm.set(self.rr)
     def reset(self,*args):
@@ -330,12 +342,12 @@ class Deliver:
         for i in range(len(rows)):
             self.listee.append( rows[i][0])
         
-        self.comb1['values']=self.listee
+        self.workercombo['values']=self.listee
         self.comb4['values']=self.listee
         conn.commit()
         conn.close()
     def iadd(self) :
-        if self.comb1.get() != "":
+        if self.workercombo.get() != "":
             if self.kaa.get()=='0' and self.haff.get()=='0' and self.daa.get()=='0' and self.hass.get()=='0' and self.mad.get()=='0':
                 messagebox.showwarning("خطـأ", "لم يتم ادخـال جميع البيانـات")
             else :
@@ -346,7 +358,7 @@ class Deliver:
                     password = "nader01227546543N")
 
                     newname = ""
-                    for i in str(self.comb1.get()):
+                    for i in str(self.workercombo.get()):
                         if i == ' ':
                             newname+='_'
                         else:
@@ -382,56 +394,56 @@ class Deliver:
             messagebox.showwarning("خطــأ","يرجـي اختيـار السائـق")
     def fetchdata(self,*args) :
         try:
-            if str(self.comb1.get())!= "":
+            if str(self.workercombo.get())!= "":
                 conn=mysql.connector.connect(
                 host = "localhost",database="nader", 
                 username ="root",
                 password = "nader01227546543N")
                 self.orders.delete(*self.orders.get_children())
                 newname = ""
-                for i in str(self.comb1.get()):
+                for i in str(self.workercombo.get()):
                     if i == ' ':
                         newname+='_'
                     else:
                         newname+=i
                 self.o = "01"
                 self.p=  "01"
-                self.yb =str(self.comb3.get())
-                self.ya=str( self.comb3.get())
-                if self.comb2.get()=="يناير" :
+                self.yb =str(self.selectYearcombo.get())
+                self.ya=str( self.selectYearcombo.get())
+                if self.monthSelectioncombo.get()=="يناير" :
                     self.o = "01"
                     self.p = "02"
-                elif self.comb2.get()=="فبراير":
+                elif self.monthSelectioncombo.get()=="فبراير":
                     self.o = "02"
                     self.p = "03"
-                elif self.comb2.get()=="مارس":
+                elif self.monthSelectioncombo.get()=="مارس":
                     self.o = "03"
                     self.p = "04"
-                elif self.comb2.get()=="ابريل":
+                elif self.monthSelectioncombo.get()=="ابريل":
                     self.o = "04"
                     self.p = "05"
-                elif self.comb2.get()=="مايو":
+                elif self.monthSelectioncombo.get()=="مايو":
                     self.o = "05"
                     self.p = "06"
-                elif self.comb2.get()=="يونيو":
+                elif self.monthSelectioncombo.get()=="يونيو":
                     self.o = "06"
                     self.p = "07"
-                elif self.comb2.get()=="يوليو":
+                elif self.monthSelectioncombo.get()=="يوليو":
                     self.o = "07"
                     self.p = "08"
-                elif self.comb2.get()=="اغسطس":
+                elif self.monthSelectioncombo.get()=="اغسطس":
                     self.o = "08"
                     self.p = "09"
-                elif self.comb2.get()=="سبتمبر":
+                elif self.monthSelectioncombo.get()=="سبتمبر":
                     self.o = "09"
                     self.p = "10"
-                elif self.comb2.get()=="اكتوبر":
+                elif self.monthSelectioncombo.get()=="اكتوبر":
                     self.o = "10"
                     self.p = "11"
-                elif self.comb2.get()=="نوفمبر":
+                elif self.monthSelectioncombo.get()=="نوفمبر":
                     self.o = "11"
                     self.p = "12"
-                elif self.comb2.get()=="ديسمبر":
+                elif self.monthSelectioncombo.get()=="ديسمبر":
                     self.o = "12"
                     self.p = "01"
                     self.ya =str( int(self.ya) + 1)
@@ -453,7 +465,7 @@ class Deliver:
             messagebox.showerror("4ekokike")
     def fetchdataaa(self) :
         try:
-            if str(self.comb1.get())!= "":
+            if str(self.workercombo.get())!= "":
                 conn=mysql.connector.connect(
                 host = "localhost",database="nader", 
                 username ="root",
@@ -461,7 +473,7 @@ class Deliver:
                 
                 
            
-                strh='select * from nader.workers where name = "{}"'.format(str(self.comb1.get()))
+                strh='select * from nader.workers where name = "{}"'.format(str(self.workercombo.get()))
                 rowww= conn.cursor()
                 rowww.execute(strh)
                 rows=rowww.fetchall()
@@ -485,7 +497,7 @@ class Deliver:
                     # password = "nader01227546543N")
 
                     newname = ""
-                    for i in str(self.comb1.get()):
+                    for i in str(self.workercombo.get()):
                         if i == ' ':
                             newname+='_'
                         else:
@@ -521,7 +533,7 @@ class Deliver:
         self.tr = 0 
         try:
                     newname = ""
-                    for i in str(self.comb1.get()):
+                    for i in str(self.workercombo.get()):
                         if i == ' ':
                             newname+='_'
                         else:
@@ -558,17 +570,17 @@ class Deliver:
 
     def delete(self):
         try :
-                if self.comb1.get() != "" : 
+                if self.workercombo.get() != "" : 
                     if self.key == False  :
                        messagebox.showwarning("خطأ", " اختـار اليوم من الجدول اولا") 
                     else :
                         if self.kaa.get()=='0' and self.haff.get()=='0' and self.daa.get()=='0' and self.hass.get()=='0' and self.mad.get()=='0':
                            messagebox.showwarning("خطـأ", "لم يتم ادخـال جميع البيانـات")
                         else :    
-                           if self.comb1.get() != "":
+                           if self.workercombo.get() != "":
 
                                newname = ""
-                               for i in str(self.comb1.get()):
+                               for i in str(self.workercombo.get()):
                                    if i == ' ':
                                        newname+='_'
                                    else:
@@ -582,7 +594,7 @@ class Deliver:
                                strt='delete from nader.{} where ta = "{}"'.format(newname,str(self.sel.get()))
                                # print(strt)
                                mycursor.execute(strt)
-                               srt='select ta from nader.{} where ta = "{}"'.format(str(self.comb1.get()),str(self.sel.get()))   
+                               srt='select ta from nader.{} where ta = "{}"'.format(str(self.workercombo.get()),str(self.sel.get()))   
                                # mycursor.execute(srt)
                                t= self.sel.get()
                                row= mycursor.fetchall()
@@ -602,17 +614,17 @@ class Deliver:
             messagebox.showerror("ERROR","ERROR")
     def update(self):
             try:
-                if self.comb1.get() != "": 
+                if self.workercombo.get() != "": 
                     if self.key==False :
                        messagebox.showwarning("خطأ", " اختـار اليوم من الجدول اولا") 
                     else :
                         if self.kaa.get()=='0' and self.haff.get()=='0' and self.daa.get()=='0' and self.hass.get()=='0' and self.mad.get()=='0':
                            messagebox.showwarning("خطـأ", "لم يتم ادخـال جميع البيانـات")
                         else :    
-                           if self.comb1.get() != "":
+                           if self.workercombo.get() != "":
 
                                newname = ""
-                               for i in str(self.comb1.get()):
+                               for i in str(self.workercombo.get()):
                                    if i == ' ':
                                        newname+='_'
                                    else:
@@ -626,7 +638,7 @@ class Deliver:
                                strt='update nader.{} set daa = {},kaa={},haff={},hass={} , mad = {} where ta = "{}"'.format(newname,  round(0.7*float(self.daa.get()),2),round(0.8*float(self.kaa.get()),2),round(float(self.haff.get()),2),round(float(self.hass.get()),2),round(float(self.mad.get()),2),str(self.sel.get()))
                                # print(strt)
                                mycursor.execute(strt)
-                               srt='select ta from nader.{} where ta = "{}"'.format(str(self.comb1.get()),str(self.sel.get()))   
+                               srt='select ta from nader.{} where ta = "{}"'.format(str(self.workercombo.get()),str(self.sel.get()))   
                                messagebox.showinfo("مقبول","تم التعديل بشكل صحيـح")
                                self.modulateId(mycursor)   
                                self.medulatetot(mycursor)  
@@ -640,7 +652,7 @@ class Deliver:
                 messagebox.showerror("ERROR","ERROR")
     def getdate(self,*args):
         try:
-            if str(self.comb1.get()) != "":
+            if str(self.workercombo.get()) != "":
                 cursor_row =self.orders.focus()
                 content = self.orders.item(cursor_row)
                 row= content['values']
@@ -656,11 +668,11 @@ class Deliver:
         except :
             messagebox.showerror("eree")  
     def updateinfo(self):
-        if self.comb1.get() != "": 
+        if self.workercombo.get() != "": 
             if self.name.get()=='' and self.idd.get()=='' and self.ideg.get()=='' and self.phon.get()=='':
                messagebox.showwarning("خطـأ", "لم يتم ادخـال جميع البيانـات")
             else :    
-               if self.comb1.get() != self.name.get() :
+               if self.workercombo.get() != self.name.get() :
                        messagebox.showerror("خطأ","لا يمكـن تعديـل الاســم")
                else :
                     if len(self.ideg.get()) == 14 or self.ideg.get() == "0" :
@@ -670,16 +682,16 @@ class Deliver:
                                             if self.keyy==False :
                                                messagebox.showwarning("خطأ", " اختـار المعلومات من الجدول اولا") 
                                             else :
-                                                            if self.comb1.get() != "":
+                                                            if self.workercombo.get() != "":
                                                                 conn=mysql.connector.connect(
                                         host = "localhost",database="nader", 
                                         username ="root",
                                         password = "nader01227546543N")
                                                                 mycursor = conn.cursor()
-                                                                strt='update nader.workers set  id = "{}",ideg= {},phone = {} where name = "{}"'.format(str(self.idd.get()),str(self.ideg.get()),str(self.phon.get()),str(self.comb1.get()))
+                                                                strt='update nader.workers set  id = "{}",ideg= {},phone = {} where name = "{}"'.format(str(self.idd.get()),str(self.ideg.get()),str(self.phon.get()),str(self.workercombo.get()))
                                                           
                                                                 mycursor.execute(strt)
-                                                                # srt='select ta from nader.{} where ta = "{}"'.format(str(self.comb1.get()),str(self.sel.get()))   
+                                                                # srt='select ta from nader.{} where ta = "{}"'.format(str(self.workercombo.get()),str(self.sel.get()))   
                                                                 messagebox.showinfo("مقبول","تم التعديل بشكل صحيـح")
                                                                 conn.commit()
                                                                 conn.close()
@@ -695,7 +707,7 @@ class Deliver:
             messagebox.showwarning("خطــأ","يرجـي اختيـار السائـق")
     def getdateinfo(self,*args):
         try:
-            if str(self.comb1.get()) != "":
+            if str(self.workercombo.get()) != "":
                 cursor_row =self.work.focus()
                 content = self.work.item(cursor_row)
                 row= content['values']

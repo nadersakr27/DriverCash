@@ -321,7 +321,7 @@ class Deliver:
                                 password = "nader01227546543N",)
                                 mycursor = conn.cursor()
                                 strr ="create table nader.{} (ta DATE UNIQUE NULL ,daa DOUBLE NULL,kaa DOUBLE NULL , haff DOUBLE NULL ,hass DOUBLE NULL,tot DOUBLE NULL , mad DOUBLE NULL ,mot DOUBLE NULL,id INT NULL)".format(self.name.get().strip())
-                                ext2="insert into workers values(%s,%s,%s,%s)",(self.idd.get(),self.name.get(),self.ideg.get(),self.phon.get())
+                                ext2=f'insert into workers values("{self.idd.get()}","{self.name.get()}",{self.ideg.get()},{self.phon.get()})'
                                 mycursor.execute(ext2)
                                 mycursor.execute(strr)
                                 conn.commit()
